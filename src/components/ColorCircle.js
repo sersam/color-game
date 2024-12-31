@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './ColorCircle.css'; // Import the CSS file for styling
 
 const colors = [
-    { name: 'Purple', hex: '#9C27B0', description: "Guess the decade of the song" },
-    { name: 'Pink', hex: '#E91E63', description: "Before/After of 2000s" },
-    { name: 'Blue', hex: '#2196F3', description: "Year of the song (+- 2 years)" },
-    { name: 'Green', hex: '#4CAF50', description: "Band or artist" },
-    { name: 'Yellow', hex: '#FFEB3B', description: "In which year was released this song?" }
+    { name: 'Purple', hex: '#9C27B0', description: "¿De qué década es esta canción?" },
+    { name: 'Pink', hex: '#E91E63', description: "¿Anterior o posterior a los 2000s?" },
+    { name: 'Blue', hex: '#2196F3', description: "¿Cual es el año de la canción (+- 2 años)?" },
+    { name: 'Green', hex: '#4CAF50', description: "¿Esta canción es de un grupo o de un artista en solitario??" },
+    { name: 'Yellow', hex: '#FFEB3B', description: "¿De quién es esta canción?" }
 ];
 
 const ColorCircle = ({ onColorSelected, isPlaying, currentSong }) => {
@@ -56,7 +56,7 @@ const ColorCircle = ({ onColorSelected, isPlaying, currentSong }) => {
     return (
         <div>
             <div className="color-circle" onClick={handleRevealDetails} style={{ backgroundColor: currentColor?.hex }}>
-                {isSelecting ? <p>Selecting...</p> : <p>Reveal song details</p>}
+                {isSelecting ? <p>Eligiendo...</p> : <p>Detalles de la canción</p>}
             </div>
             <h3>
                 {!isSelecting && currentColor && <>{currentColor.description}</>}
@@ -65,9 +65,9 @@ const ColorCircle = ({ onColorSelected, isPlaying, currentSong }) => {
                 <div>
                     {showSongDetails && (
                         <div className="song-details">
-                            <p><strong>Song:</strong> {currentSong.name}</p>
-                            <p><strong>Artist:</strong> {currentSong.artists[0].name}</p>
-                            <p><strong>Release Date:</strong> {new Date(currentSong.album.release_date).getFullYear()}</p>
+                            <p><strong>Canción:</strong> {currentSong.name}</p>
+                            <p><strong>Artista:</strong> {currentSong.artists[0].name}</p>
+                            <p><strong>Año:</strong> {new Date(currentSong.album.release_date).getFullYear()}</p>
                         </div>
                     )}
                 </div>

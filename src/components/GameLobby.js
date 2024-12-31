@@ -182,12 +182,12 @@ const GameLobby = () => {
         <div className="container">
             <div className="card">
                 {winner ? (
-                    <h1>{winner} is the winner!</h1>
+                    <h1>¡{winner} ha ganadp!</h1>
                 ) : (<>
 
-                    <h1>Player {players[currentPlayer]}</h1>
+                    <h1>Jugador {players[currentPlayer]}</h1>
                     <div className='game-controls'>
-                        <button onClick={handleNextPlayer}>Next Player</button>
+                        <button onClick={handleNextPlayer}>Siguiente jugador</button>
                         {!isPlaying ?
                             <button className="play-button" onClick={handlePlay}>
                                 <i className="fas fa-play"></i>
