@@ -13,26 +13,19 @@ const availableColors = [
     '#FFEB3B'  // Yellow
 ];
 
-const genres = [
-    'pop',
-    'rock',
-    'rap',
-    'metal'
+const decades = [
+    '1920-1929',
+    '1930-1939',
+    '1940-1949',
+    '1950-1959',
+    '1960-1969',
+    '1970-1979',
+    '1980-1989',
+    '1990-1999',
+    '2000-2009',
+    '2010-2019',
+    '2020-2029'
 ];
-
-const releaseYears = [
-    '1920-1930',
-    '1930-1940',
-    '1940-1950',
-    '1950-1960',
-    '1960-1970',
-    '1970-1980',
-    '1980-1990',
-    '1990-2000',
-    '2000-2010',
-    '2010-2020',
-    '2020-2025'
-]
 
 const GameLobby = () => {
     const location = useLocation();
@@ -43,10 +36,11 @@ const GameLobby = () => {
     const [markedCells, setMarkedCells] = useState(Array.from({ length: numPlayers }, () => Array.from({ length: 5 }, () => Array(5).fill(false)))); // Track marked cells for each player
     const [activeColor, setActiveColor] = useState(null); // Track the active color for the current player
     const [isPlaying, setIsPlaying] = useState(false); // Track if the game is in play
-    // const [songs, setSongs] = useState([]); // State to hold fetched songs
+    const [songs, setSongs] = useState([]); // State to hold fetched songs
     const [audioRef,] = useState(null); // State to hold the audio element
     const [currentSong, setCurrentSong] = useState(null); // State to hold the currently playing song details
     const [winner, setWinner] = useState(null); // State to hold the winner
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
     const playerRef = useRef(null); // Ref to hold the Spotify player
     const deviceIdRef = useRef(null); // Ref to hold the device ID
 
@@ -97,21 +91,57 @@ const GameLobby = () => {
         };
     }, [accessToken]);
 
-    const fetchRandomSongs = async () => {
-        const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-        const randomYears = releaseYears[Math.floor(Math.random() * releaseYears.length)];
+    const getRandomSearchTerm = () => {
+        const letters = 'abcdefghijklmnopqrstuvwxyz';
+        const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+        return randomLetter;
+    };
 
-        const query = `${randomGenre} year:${randomYears}`;
-        const response = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&market=ES&limit=50`, {
+    const fetchSongsByDecade = async (decade, minPopularity = 50) => {
+        let allSongs = [];
+        let offset = 0;
+        const limit = 50; // Maximum limit per request
+
+        const randomSearchTerm = getRandomSearchTerm();
+        const response = await fetch(`https://api.spotify.com/v1/search?q=${randomSearchTerm}%20year:${decade}&type=track&market=ES&limit=${limit}&offset=${offset}`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
         const data = await response.json();
-        const filteredSongs = data.tracks.items.filter(track => track.popularity >= 60);
+        const filteredSongs = data.tracks.items.filter(track => track.popularity >= minPopularity);
+        allSongs = [...allSongs, ...filteredSongs];
+        offset += limit;
 
-        return filteredSongs;
+        return allSongs.slice(0, 50); // Return only the first 50 songs
     };
+
+    const fetchAllSongs = async () => {
+        setIsLoading(true); // Set loading to true before fetching
+        let allFetchedSongs = [];
+        for (const decade of decades) {
+            const songs = await fetchSongsByDecade(decade);
+            allFetchedSongs = [...allFetchedSongs, ...songs];
+        }
+        setSongs(allFetchedSongs);
+
+        const songsByYear = allFetchedSongs.reduce((acc, song) => {
+            const releaseYear = new Date(song.album.release_date).getFullYear();
+            if (acc[releaseYear]) {
+                acc[releaseYear]++;
+            } else {
+                acc[releaseYear] = 1;
+            }
+            return acc;
+        }, {});
+
+        console.log(songsByYear); // Log the object to verify the result
+        setIsLoading(false); // Set loading to false after fetching
+    };
+    useEffect(() => {
+        fetchAllSongs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleNextPlayer = () => {
         setCurrentPlayer((prev) => (prev + 1) % numPlayers); // Switch to the next player
@@ -148,7 +178,6 @@ const GameLobby = () => {
     };
 
     const handlePlay = async () => {
-        const songs = await fetchRandomSongs();
         setIsPlaying(true);
         if (songs.length > 0) {
             const songIndex = Math.floor(Math.random() * songs.length); // Pick a random song
@@ -156,7 +185,7 @@ const GameLobby = () => {
             setCurrentSong(selectedSong); // Set the current song details
 
             if (playerRef.current && deviceIdRef.current) {
-                const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceIdRef.current}`, {
+                await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceIdRef.current}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
@@ -166,11 +195,8 @@ const GameLobby = () => {
                         uris: [selectedSong.uri]
                     })
                 });
-
-                if (response.status === 204) {
-                    playerRef.current.resume();
-                }
             }
+            setSongs(prevSongs => prevSongs.filter(s => s.uri !== selectedSong.uri));
         }
     }
 
@@ -180,32 +206,40 @@ const GameLobby = () => {
 
     return (
         <div className="container">
-            <div className="card">
-                {winner ? (
-                    <h1>¡{winner} ha ganadp!</h1>
-                ) : (<>
-
-                    <h1>Jugador {players[currentPlayer]}</h1>
-                    <div className='game-controls'>
-                        <button onClick={handleNextPlayer}>Siguiente jugador</button>
-                        {!isPlaying ?
-                            <button className="play-button" onClick={handlePlay}>
-                                <i className="fas fa-play"></i>
-                            </button>
-                            :
-                            <ColorCircle onColorSelected={handleColorSelected} isPlaying={isPlaying} currentSong={currentSong} />
-                        }
+            {isLoading ?
+                <div className="loading-mask">
+                    <div className="spinner">
+                        <div></div>
+                        <div></div>
+                        <div></div>
                     </div>
+                    <p>Obteniendo canciones...</p>
+                </div> : (
+                    <div className="card">
+                        {winner ? (
+                            <h1>¡{winner} ha ganado!</h1>
+                        ) : (<>
 
-                    <GameBoard
-                        board={boards[currentPlayer]}
-                        currentPlayer={players[currentPlayer]}
-                        markedCells={markedCells[currentPlayer]} // Pass the current player's marked cells
-                        onCellClick={handleCellClick} // Pass the cell click handler
-                        activeColor={activeColor} // Pass the active color
-                        isPlaying={isPlaying} // Pass the playing state
-                    /></>)}
-            </div>
+                            <h1>Jugador {players[currentPlayer]}</h1>
+                            <div className='game-controls'>
+                                <button onClick={handleNextPlayer}>Siguiente jugador</button>
+                                {!isPlaying ?
+                                    <button className="play-button" onClick={handlePlay}>
+                                        <i className="fas fa-play"></i>
+                                    </button>
+                                    :
+                                    <ColorCircle onColorSelected={handleColorSelected} isPlaying={isPlaying} currentSong={currentSong} />
+                                }
+                            </div>
+
+                            <GameBoard
+                                board={boards[currentPlayer]}
+                                markedCells={markedCells[currentPlayer]} // Pass the current player's marked cells
+                                onCellClick={handleCellClick} // Pass the cell click handler
+                                activeColor={activeColor} // Pass the active color
+                            /></>)}
+                    </div>)}
+
         </div>
     );
 };
