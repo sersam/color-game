@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './PlayerSelection.css'; // Import the CSS file
 
 const parsedHash = new URLSearchParams(
@@ -9,7 +9,6 @@ const parsedHash = new URLSearchParams(
 const PlayerSelection = () => {
     const [players, setPlayers] = useState(['']); // Initialize with one empty player name
     const navigate = useNavigate();
-    const location = useLocation();
 
     const handleAddPlayer = () => {
         setPlayers([...players, '']); // Add a new empty string for a new player

@@ -39,12 +39,12 @@ const GameLobby = () => {
     const { players, accessToken } = location.state; // Get player names from state
     const numPlayers = players.length; // Number of players
     const [currentPlayer, setCurrentPlayer] = useState(0); // Track the current player
-    const [boards, setBoards] = useState(Array.from({ length: numPlayers }, () => generateBoard())); // Create boards for each player
+    const [boards,] = useState(Array.from({ length: numPlayers }, () => generateBoard())); // Create boards for each player
     const [markedCells, setMarkedCells] = useState(Array.from({ length: numPlayers }, () => Array.from({ length: 5 }, () => Array(5).fill(false)))); // Track marked cells for each player
     const [activeColor, setActiveColor] = useState(null); // Track the active color for the current player
     const [isPlaying, setIsPlaying] = useState(false); // Track if the game is in play
-    const [songs, setSongs] = useState([]); // State to hold fetched songs
-    const [audioRef, setAudioRef] = useState(null); // State to hold the audio element
+    // const [songs, setSongs] = useState([]); // State to hold fetched songs
+    const [audioRef,] = useState(null); // State to hold the audio element
     const [currentSong, setCurrentSong] = useState(null); // State to hold the currently playing song details
     const [winner, setWinner] = useState(null); // State to hold the winner
     const playerRef = useRef(null); // Ref to hold the Spotify player
@@ -109,9 +109,8 @@ const GameLobby = () => {
         });
         const data = await response.json();
         const filteredSongs = data.tracks.items.filter(track => track.popularity >= 60);
-        setSongs(filteredSongs);
 
-        return data.tracks.items;
+        return filteredSongs;
     };
 
     const handleNextPlayer = () => {
