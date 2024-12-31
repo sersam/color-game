@@ -5,11 +5,19 @@ const SpotifyAuth = () => {
     const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
     const REDIRECT_URI = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
     const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
-    const SCOPES = 'user-modify-playback-state streaming';
     const RESPONSE_TYPE = 'token';
+    const scopes = [
+        'streaming',
+        'user-read-email',
+        'user-read-private',
+        'user-modify-playback-state',
+        'user-read-playback-state',
+        'user-library-read',
+        'user-library-modify'
+    ];
 
     const handleLogin = () => {
-        window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPES)}`;
+        window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${scopes.join('%20')}&response_type=token&show_dialog=true`;
     };
 
     useEffect(() => {
