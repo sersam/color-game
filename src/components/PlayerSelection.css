@@ -1,0 +1,75 @@
+/* src/components/PlayerSelection.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    /* Full height of the viewport */
+    /* Match the global background */
+    color: #ffffff;
+    /* Light text color */
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    /* Darker text color */
+}
+
+input {
+    width: 300px;
+    /* Fixed width for input fields */
+    padding: 10px;
+    /* Padding inside input fields */
+    margin: 10px 0;
+    /* Margin between input fields */
+    border: 1px solid #ccc;
+    /* Light gray border */
+    border-radius: 5px;
+    /* Rounded corners */
+    font-size: 16px;
+    /* Font size */
+    background-color: #1e1e1e;
+    /* Dark input background */
+    color: #ffffff;
+    /* Light text color */
+    border: 1px solid #ccc;
+    /* Light border */
+}
+
+button {
+    width: 150px;
+    /* Fixed width for buttons */
+    padding: 10px;
+    /* Padding inside buttons */
+    margin: 10px;
+    /* Margin around buttons */
+    border: none;
+    /* Remove default border */
+    border-radius: 5px;
+    /* Rounded corners */
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    /* White text color */
+    font-size: 16px;
+    /* Font size */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: background-color 0.3s;
+    /* Smooth transition for background color */
+}
+
+button:hover {
+    background-color: #45a049;
+    /* Darker green on hover */
+}
+
+button:disabled {
+    background-color: #ccc;
+    /* Gray background for disabled button */
+    cursor: not-allowed;
+    /* Not-allowed cursor for disabled button */
+}

@@ -1,0 +1,15 @@
+/* src/components/ColorCircle.css */
+
+.color-circle {
+    width: 100px; /* Width of the circle */
+    height: 100px; /* Height of the circle */
+    border-radius: 50%; /* Make it a circle */
+    display: flex; /* Use flexbox for centering text */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    color: white; /* Text color */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+    margin: 20px auto; /* Center the circle in the container */
+}
