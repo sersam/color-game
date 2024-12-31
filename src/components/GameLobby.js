@@ -197,7 +197,7 @@ const GameLobby = () => {
             setCurrentSong(selectedSong); // Set the current song details
 
             if (playerRef.current && deviceIdRef.current) {
-                await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceIdRef.current}`, {
+                const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceIdRef.current}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
