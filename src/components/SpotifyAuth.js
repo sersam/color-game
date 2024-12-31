@@ -23,10 +23,10 @@ const SpotifyAuth = () => {
 
     return (
         <div className="spotify-auth-container">
-            <h1>Spotify Authentication</h1>
-            <p>To play the game you need to connect to your Spotify Account</p>
-            <h2>Spotify Premium is needed</h2>
-            <button onClick={handleLogin}>Connect with Spotify</button>
+            <h1>Spotify</h1>
+            <p>Para jugar al juego es necesario que autorices a la aplicación a usar Spotify</p>
+            <h2>Spotify Premium es necesario</h2>
+            <button onClick={handleLogin}>Conectar con Spotify</button>
         </div>
     );
 };

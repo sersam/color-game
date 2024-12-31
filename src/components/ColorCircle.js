@@ -56,7 +56,7 @@ const ColorCircle = ({ onColorSelected, isPlaying, currentSong }) => {
     return (
         <div>
             <div className="color-circle" onClick={handleRevealDetails} style={{ backgroundColor: currentColor?.hex }}>
-                {isSelecting ? <p>Eligiendo...</p> : <p>Detalles de la canción</p>}
+                {isSelecting ? <p>Eligiendo...</p> : <p>Revelar canción</p>}
             </div>
             <h3>
                 {!isSelecting && currentColor && <>{currentColor.description}</>}

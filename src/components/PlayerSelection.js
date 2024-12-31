@@ -26,7 +26,7 @@ const PlayerSelection = () => {
 
     return (
         <div className="container"> {/* Apply container class for styling */}
-            <h1>Enter Player Names</h1>
+            <h1>Introduce los nombres de los jugadores</h1>
             {players.map((player, index) => (
                 <input 
                     key={index} 
@@ -36,8 +36,8 @@ const PlayerSelection = () => {
                     placeholder={`Player ${index + 1} Name`} 
                 />
             ))}
-            <button onClick={handleAddPlayer}>Add Player</button>
-            <button onClick={handleStartGame} disabled={players.some(name => name.trim() === '')}>Start Game</button> {/* Disable if any name is empty */}
+            <button onClick={handleAddPlayer}>Añadir jugador</button>
+            <button onClick={handleStartGame} disabled={players.some(name => name.trim() === '')}>¡Empezar a jugar!</button> {/* Disable if any name is empty */}
         </div>
     );
 };
